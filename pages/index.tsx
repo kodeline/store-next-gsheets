@@ -8,20 +8,27 @@ interface Props {
   products: Product[];
 }
 
+function parseCurrency(value: number): string {
+  return value.toLocaleString('es-AR', {
+    style: "currency",
+    currency: "ARS",
+  });
+}
+
 const IndexRoute: React.FC<Props> = ({ products }) => {
 
   const [cart, setCart] = React.useState<Product[]>([]);
   const text = React.useMemo(() => {
     return cart
-      .reduce((message, product) => message.concat(`* ${product.title} - ${product.price} ARS\n`), ``,)
-      .concat(`\nTotal: ${cart.reduce((total, product) => total + product.price, 0)} ARS`);
+      .reduce((message, product) => message.concat(`* ${product.title} - ${parseCurrency(product.price)} ARS\n`), ``,)
+      .concat(`\nTotal: ${parseCurrency(cart.reduce((total, product) => total + product.price, 0))}`);
   }, [cart]); 
    
 
   return (
     <>
       {/* Sección de Pedidos */}
-      <Link href={`https://wa.me/5491126954062?text=${encodeURIComponent(text)}`} className="container cart flex justify-end m-0">
+      <Link href={`https://wa.me/5491158988500?text=${encodeURIComponent(text)}`} className="container cart flex justify-end m-0">
         <button className="bg-green-600"> Completar Pedido ({cart.length}) </button>
       </Link>
       {/* Sección de Productos */}
@@ -30,7 +37,7 @@ const IndexRoute: React.FC<Props> = ({ products }) => {
           <div className="card bg-gray-900" key={product.id}>
             <img src={product.image} />
             <h3>{product.title}</h3>
-            <p>${product.price}</p>
+            <p>{parseCurrency(product.price)}</p>
             <button onClick={() => setCart(cart => cart.concat(product))} className="bg-red-500">Agregar</button>
           </div>
         )}
@@ -43,6 +50,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const products = await api.list();
 
   return {
+    revalidate: 10,
     props: {
       products,
     },
