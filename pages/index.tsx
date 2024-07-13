@@ -29,16 +29,18 @@ const IndexRoute: React.FC<Props> = ({ products }) => {
     <>
       {/* Sección de Pedidos */}
       <Link href={`https://wa.me/5491158988500?text=${encodeURIComponent(text)}`} className="container cart flex justify-end m-0">
-        <button className="bg-green-600"> Completar Pedido ({cart.length}) </button>
+        <button className="bg-green-600 hover:bg-green-700 m-1 p-2 rounded-3xl text-white"> Completar Pedido ({cart.length}) </button>
       </Link>
       {/* Sección de Productos */}
-      <div className="container grid gap-6 m-auto mt-[5%] align-items-center grid-cols-6">
+      <div className="container grid gap-6 m-auto mt-[5%] grid-cols-5">
         {products.map((product) =>
-          <div className="card bg-gray-900" key={product.id}>
-            <img src={product.image} />
+          <div className="card grid w-11/12" key={product.id}>
+            <img className="rounded-md h-80 w-[100%] " src={product.image} loading="lazy" />
             <h3>{product.title}</h3>
-            <p>{parseCurrency(product.price)}</p>
-            <button onClick={() => setCart(cart => cart.concat(product))} className="bg-red-500">Agregar</button>
+            <p className="text-right text-lg text-black">{parseCurrency(product.price)}</p>
+            <button 
+              onClick={() => setCart(cart => cart.concat(product))} 
+              className="bg-blue-500 hover:bg-blue-700 m-1 p-1 w-10/12 justify-self-center rounded-2xl text-white">Agregar</button>
           </div>
         )}
       </div>
